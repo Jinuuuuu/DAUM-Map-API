@@ -1,0 +1,73 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title : run_DAUM_API
+% 
+% Description : 위치 데이터를 입력받아 Daum API인 HTML 파일 형태로 출력
+%          
+% Written by : Jinwoo Jung
+% Last updated : 2017/05/24
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear;
+close all;
+clc;
+format long g
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 사용자 입력값
+fprintf('run_DAUM_API   by Jinwoo \n');
+% marker
+%marker_address='http://i1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'  % basic marker                             
+marker_address='file:///D:/Matlab_code/ToolBox/DAUM_API/image/P_R.png'; % EX of custom marker
+marker_size=[20 20];
+
+% --------------------color HEX code----------------------
+%             red : '#FF0000'
+%             blue : '#0000FF'
+%             green : '#08FF00'
+%             yello : '#FAFF00'                
+%             cyan : '#00FFFF'
+% ---------------------------------------------------------
+% line
+strokeWieght=3; strokeColor='#0000FF'; strokeOpacity=1; strokeStyle='solid';
+
+width=100; height=850; % 웹페이지 크기
+cen= [35.689221,   128.466964];% 화면 중심점 좌
+key='85b32471aedcb298d750fe34655600a6'; % Daum API User Key (막히면 바꿔야함!!, by Jinwoo, 17.05.24)
+
+gps_pos=load('pos.txt'); % 읽어올 위치 데이터
+fid=fopen('test.html','wt'); % 출력되는 파일명 및 path
+
+%% API 작성
+% 헤더 영역 생성
+make_header(fid, width, height, cen, key);
+
+type=[0 1]; % [marker, line]
+
+if type(1) == 1
+    conv4marker(fid, gps_pos(:,3:4), 10);
+    att4marker(fid, marker_address, marker_size);
+    fprintf('Marker 생성 완료! \n');
+elseif type(2) == 1
+    conv4line(fid, gps_pos(:,3:4), 10);
+    att4line(fid, strokeWieght, strokeColor, strokeOpacity, strokeStyle );
+    fprintf('Line 생성 완료! \n');
+end
+
+% end 영역 생성
+make_end(fid);
+% close file
+fclose(fid);
+fprintf('Finished! \n');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
